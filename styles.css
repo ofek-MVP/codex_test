@@ -6,11 +6,14 @@
   --muted: #6b645c;
   --accent: #d95d39;
   --accent-dark: #8f2d17;
-  --grid: #ead9c8;
   --snake: #2d6a4f;
   --snake-head: #1b4332;
   --food: #ef476f;
   --shadow: 0 20px 45px rgba(93, 58, 26, 0.16);
+  --page-glow: rgba(255, 255, 255, 0.7);
+  --page-start: #f3e9d8;
+  --page-end: #f0c89b;
+  --board-frame: rgba(143, 45, 23, 0.12);
 }
 
 * {
@@ -23,11 +26,12 @@ body {
   font-family: "Segoe UI", sans-serif;
   color: var(--ink);
   background:
-    radial-gradient(circle at top, rgba(255, 255, 255, 0.7), transparent 35%),
-    linear-gradient(135deg, #f3e9d8, var(--bg) 45%, #f0c89b 100%);
+    radial-gradient(circle at top, var(--page-glow), transparent 35%),
+    linear-gradient(135deg, var(--page-start), var(--bg) 45%, var(--page-end) 100%);
   display: grid;
   place-items: center;
   padding: 24px;
+  transition: background 240ms ease;
 }
 
 .game-shell {
@@ -100,6 +104,10 @@ h1 {
   display: block;
   font-size: 2rem;
   margin-top: 8px;
+}
+
+.progress-value {
+  font-size: 1.45rem;
 }
 
 .actions {
@@ -195,13 +203,9 @@ button:hover {
 canvas {
   width: min(100%, 420px);
   aspect-ratio: 1;
-  background:
-    linear-gradient(90deg, transparent 19px, var(--grid) 20px),
-    linear-gradient(transparent 19px, var(--grid) 20px),
-    #fff9f2;
-  background-size: 20px 20px;
   border-radius: 22px;
-  border: 2px solid rgba(143, 45, 23, 0.12);
+  border: 2px solid var(--board-frame);
+  background: transparent;
 }
 
 .hint {
