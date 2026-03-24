@@ -31,15 +31,16 @@ body {
 }
 
 .game-shell {
-  width: min(960px, 100%);
+  width: min(1240px, 100%);
   display: grid;
-  grid-template-columns: 320px minmax(280px, 1fr);
+  grid-template-columns: 320px minmax(280px, 1fr) 280px;
   gap: 24px;
   align-items: center;
 }
 
 .panel,
-.board-wrap {
+.board-wrap,
+.history-panel {
   background: var(--panel);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.65);
@@ -130,6 +131,67 @@ button:hover {
   padding: 22px;
 }
 
+.history-panel {
+  padding: 22px;
+  align-self: stretch;
+}
+
+.history-panel h2 {
+  margin: 0;
+  font-size: 1.45rem;
+}
+
+.history-subtitle {
+  margin: 8px 0 16px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.history-item,
+.history-empty {
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.history-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.history-index {
+  display: inline-grid;
+  place-items: center;
+  min-width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(217, 93, 57, 0.12);
+  color: var(--accent-dark);
+  font-weight: 700;
+}
+
+.history-meta strong {
+  display: block;
+}
+
+.history-meta small {
+  color: var(--muted);
+}
+
+.history-empty {
+  color: var(--muted);
+}
+
 canvas {
   width: min(100%, 420px);
   aspect-ratio: 1;
@@ -153,10 +215,14 @@ canvas {
   }
 
   .panel {
-    order: 2;
+    order: 1;
   }
 
   .board-wrap {
-    order: 1;
+    order: 2;
+  }
+
+  .history-panel {
+    order: 3;
   }
 }

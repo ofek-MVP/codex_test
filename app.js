@@ -4,11 +4,14 @@ const scoreElement = document.getElementById("score");
 const highScoreElement = document.getElementById("high-score");
 const statusElement = document.getElementById("status");
 const startButton = document.getElementById("start-button");
+const historyListElement = document.getElementById("history-list");
 
 const gridSize = 21;
 const tileSize = canvas.width / gridSize;
 const tickDelay = 120;
 const storageKey = "simple-snake-high-score";
+const historyStorageKey = "simple-snake-game-history";
+const maxHistoryItems = 5;
 
 let snake;
 let direction;
@@ -17,6 +20,7 @@ let food;
 let score;
 let gameLoop;
 let isRunning = false;
+let gameStartTime;
 
 function loadHighScore() {
   const saved = Number.parseInt(localStorage.getItem(storageKey) || "0", 10);
@@ -34,11 +38,89 @@ function resetGame() {
   score = 0;
   food = spawnFood();
   isRunning = true;
+  gameStartTime = Date.now();
   scoreElement.textContent = "0";
   statusElement.textContent = "בהצלחה";
   clearInterval(gameLoop);
   gameLoop = setInterval(update, tickDelay);
   draw();
+}
+
+function loadHistory() {
+  const saved = localStorage.getItem(historyStorageKey);
+  if (!saved) {
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(saved);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveHistory(history) {
+  localStorage.setItem(historyStorageKey, JSON.stringify(history));
+}
+
+function formatDuration(seconds) {
+  if (seconds < 60) {
+    return `${seconds} שניות`;
+  }
+
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes} דק׳ ו-${remainingSeconds} שנ׳`;
+}
+
+function formatGameDate(timestamp) {
+  return new Date(timestamp).toLocaleString("he-IL", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
+
+function renderHistory() {
+  const history = loadHistory();
+  historyListElement.textContent = "";
+
+  if (history.length === 0) {
+    const emptyItem = document.createElement("li");
+    emptyItem.className = "history-empty";
+    emptyItem.textContent = "עדיין אין משחקים שנשמרו.";
+    historyListElement.append(emptyItem);
+    return;
+  }
+
+  history.forEach((item, index) => {
+    const listItem = document.createElement("li");
+    listItem.className = "history-item";
+    listItem.innerHTML = `
+      <span class="history-index">#${history.length - index}</span>
+      <div class="history-meta">
+        <strong>${item.score} נק׳</strong>
+        <small>${formatDuration(item.durationInSeconds)} • ${formatGameDate(item.finishedAt)}</small>
+      </div>
+    `;
+    historyListElement.append(listItem);
+  });
+}
+
+function pushGameToHistory() {
+  const durationInSeconds = Math.max(1, Math.floor((Date.now() - gameStartTime) / 1000));
+  const nextEntry = {
+    score,
+    durationInSeconds,
+    finishedAt: Date.now()
+  };
+
+  const nextHistory = [nextEntry, ...loadHistory()].slice(0, maxHistoryItems);
+  saveHistory(nextHistory);
+  renderHistory();
 }
 
 function spawnFood() {
@@ -107,6 +189,7 @@ function updateHighScore() {
 function endGame() {
   isRunning = false;
   clearInterval(gameLoop);
+  pushGameToHistory();
   statusElement.textContent = "נפסלת. לחץ על התחל מחדש";
   draw(true);
 }
@@ -163,4 +246,5 @@ document.addEventListener("keydown", (event) => {
 startButton.addEventListener("click", resetGame);
 
 loadHighScore();
+renderHistory();
 draw();
