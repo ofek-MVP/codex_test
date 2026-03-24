@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snake פשוט</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="game-shell">
+    <section class="panel">
+      <p class="eyebrow">משחק דפדפן קטן</p>
+      <h1>Snake</h1>
+      <p class="description">
+        זוז עם החצים או עם WASD, תאכל את האוכל ותנסה לא להתנגש בעצמך.
+      </p>
+
+      <div class="stats">
+        <div class="stat-card">
+          <span>ניקוד</span>
+          <strong id="score">0</strong>
+        </div>
+        <div class="stat-card">
+          <span>שיא</span>
+          <strong id="high-score">0</strong>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="start-button" type="button">התחל מחדש</button>
+        <span id="status">לחץ על התחל כדי לשחק</span>
+      </div>
+
+      <p class="hint">טיפ: אי אפשר להסתובב מיד לכיוון ההפוך.</p>
+    </section>
+
+    <section class="board-wrap" aria-label="לוח המשחק">
+      <canvas id="game" width="420" height="420"></canvas>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
